@@ -11,21 +11,20 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import NewProjectFlow from './pages/NewProjectFlow'; 
 import './App.css';
 
 function App(): React.ReactNode {
   return (
     <Router>
       <AuthProvider>
-        {/* Aurora background */}
+        {/* Background Effects */}
         <div className="aurora-bg">
           <div className="aurora-kashmir" />
         </div>
-
-        {/* Noise texture */}
         <div className="noise-overlay" />
 
-        {/* App shell */}
+        {/* Layout Shell */}
         <div style={{ position: 'relative', zIndex: 2, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Navbar />
           <main style={{ flex: 1 }}>
@@ -36,11 +35,23 @@ function App(): React.ReactNode {
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              
+              {/* Dashboard */}
               <Route
                 path="/dashboard"
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* New Project Flow */}
+              <Route
+                path="/projects/new"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectFlow />
                   </ProtectedRoute>
                 }
               />

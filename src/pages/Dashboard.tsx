@@ -1,156 +1,177 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import ServicesModal from '../components/ServicesModal'; // Ensure this file exists
+import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  FiActivity, 
+  FiLayers, 
+  FiUsers, 
+  FiPlus, 
+  FiZap 
+} from 'react-icons/fi';
 
-const CARDS = [
-  { icon: '📊', label: 'Projects', value: '0', sub: 'Active projects', color: 'from-blue-500 to-cyan-400', path: '/projects' },
-  { icon: '💰', label: 'Billing', value: 'Free', sub: 'Current plan', color: 'from-green-500 to-emerald-400', path: '/billing' },
-  { icon: '🛟', label: 'Support', value: '24/7', sub: 'Always available', color: 'from-orange-500 to-amber-400', path: '/contact' },
-  { icon: '📈', label: 'Analytics', value: '1.2k', sub: 'Monthly views', color: 'from-purple-500 to-pink-400', path: '/analytics' },
+type Stat = {
+  label: string;
+  value: string;
+  path: string;
+  icon: React.ReactNode;
+  trend: string;
+  color: string;
+};
+
+type Activity = {
+  title: string;
+  time: string;
+  status: 'success' | 'info' | 'warning' | 'error';
+};
+
+const STATS: Stat[] = [
+  { 
+    label: 'Active Projects', 
+    value: '12', 
+    path: '/projects', 
+    icon: <FiLayers />, 
+    trend: '+2.5%', 
+    color: 'from-blue-500 to-cyan-400' 
+  },
+  { 
+    label: 'Team Members', 
+    value: '05', 
+    path: '/team', 
+    icon: <FiUsers />, 
+    trend: 'Stable', 
+    color: 'from-indigo-500 to-purple-500' 
+  },
 ];
 
-function Dashboard() {
-  const { user } = useAuth();
+const ACTIVITY: Activity[] = [
+  { title: 'New deployment successful', time: '2 mins ago', status: 'success' },
+  { title: 'API rate limit warning', time: '1 hour ago', status: 'warning' },
+  { title: 'Project "Alpha" initialized', time: '3 hours ago', status: 'info' },
+];
+
+const Dashboard: React.FC = () => {
+  const { user } = useAuth() as { user?: { firstName?: string } };
+  const navigate = useNavigate();
   const [greeting, setGreeting] = useState('');
-  const [showServices, setShowServices] = useState(false); // State for the popup
 
   useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good Morning');
-    else if (hour < 18) setGreeting('Good Afternoon');
-    else setGreeting('Good Evening');
+    const h = new Date().getHours();
+    if (h < 12) setGreeting('Good morning');
+    else if (h < 18) setGreeting('Good afternoon');
+    else setGreeting('Good evening');
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] pt-24 pb-12 px-4 md:px-8 font-sans">
-      {/* Services Modal logic */}
-      <ServicesModal isOpen={showServices} onClose={() => setShowServices(false)} />
-
-      <div className="max-w-7xl mx-auto">
+    <div className="mt-16 min-h-[calc(100vh-64px)] relative overflow-hidden">
+      <div className="relative p-6 lg:p-10 max-w-7xl mx-auto">
         
-        {/* --- HEADER SECTION --- */}
-        <header className="relative bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100 overflow-hidden mb-8">
-          {/* Decorative background blur */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-green-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-60" />
-          
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex flex-col gap-4">
-              <motion.img 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                src="/cool.png" 
-                alt="Logo" 
-                className="h-10 w-auto object-contain self-start drop-shadow-md"
-              />
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                  ✦ User Workspace
-                </span>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mt-2">
-                  {greeting}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-cyan-600">{user?.firstName}</span> 👋
-                </h1>
-                <p className="text-gray-500 font-medium mt-2">Scale your vision with KaarBaar Solutions.</p>
-                
-                {/* Explore Services Button Trigger */}
-                <motion.button 
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowServices(true)}
-                  className="mt-6 px-8 py-3.5 bg-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-gray-200 hover:bg-green-600 transition-colors"
-                >
-                  Explore Services
-                </motion.button>
-              </div>
+        {/* Header Section */}
+        <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-widest mb-2">
+              <span className="w-6 h-[2px] bg-indigo-600"></span>
+              {greeting}
             </div>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+              Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">{user?.firstName || 'User'}</span>
+            </h1>
+          </motion.div>
 
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-2xl border border-gray-100"
-            >
-              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-green-400 to-cyan-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-green-200">
-                {user?.firstName?.[0]}
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Account Status</p>
-                <p className="text-sm font-black text-gray-800 italic">Verified Pro</p>
-              </div>
-            </motion.div>
-          </div>
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigate('/projects/new')}
+            className="flex items-center justify-center gap-3 px-8 py-4 bg-slate-900 text-white font-bold rounded-2xl shadow-xl hover:bg-indigo-600 transition-all group"
+          >
+            <FiPlus className="text-xl group-hover:rotate-90 transition-transform duration-300" />
+            <span>New Project</span>
+          </motion.button>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* --- LEFT CONTENT --- */}
           <div className="lg:col-span-2 space-y-8">
-            
-            {/* Stat Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {CARDS.map((card, idx) => (
-                <Link key={idx} to={card.path}>
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-500/5 transition-all hover:-translate-y-1 group"
-                  >
-                    <span className="text-2xl group-hover:scale-110 inline-block transition-transform">{card.icon}</span>
-                    <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-4">{card.label}</p>
-                    <p className={`text-2xl font-black bg-gradient-to-r ${card.color} bg-clip-text text-transparent mt-1`}>
-                      {card.value}
-                    </p>
-                    <p className="text-[10px] text-gray-400 mt-1 font-medium">{card.sub}</p>
-                  </motion.div>
-                </Link>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {STATS.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <Link to={stat.path} className="group relative block p-8 bg-white/60 backdrop-blur-md border border-white/40 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <div className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${stat.color}`} />
+                    <div className="flex justify-between items-start">
+                      <div className="p-4 bg-white/80 rounded-2xl text-slate-600 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
+                        {stat.icon}
+                      </div>
+                      <span className="text-[10px] font-black text-emerald-600 bg-emerald-50/50 px-3 py-1 rounded-full border border-emerald-100">
+                        {stat.trend}
+                      </span>
+                    </div>
+                    <div className="mt-8">
+                      <p className="text-5xl font-black text-slate-900 tracking-tighter">{stat.value}</p>
+                      <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mt-1">{stat.label}</p>
+                    </div>
+                  </Link>
+                </motion.div>
               ))}
             </div>
 
-            {/* Quick Actions Card */}
-            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
-              <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-400 mb-6 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Action Center
-              </h3>
+            {/* Performance Hub */}
+            <div className="bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/40 shadow-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <FiZap className="text-amber-500 fill-amber-500" />
+                <h2 className="font-black text-slate-900 uppercase tracking-widest text-xs">Performance Hub</h2>
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  { label: 'New Project', icon: '➕', color: 'bg-blue-50 text-blue-600', to: '/projects/new' },
-                  { label: 'Invoices', icon: '📄', color: 'bg-purple-50 text-purple-600', to: '/billing' },
-                  { label: 'Settings', icon: '⚙️', color: 'bg-gray-50 text-gray-600', to: '/settings' },
-                  { label: 'Support', icon: '💬', color: 'bg-orange-50 text-orange-600', to: '/contact' },
-                ].map((action, i) => (
-                  <Link key={i} to={action.to} className="flex flex-col items-center gap-3 p-4 rounded-3xl hover:bg-gray-50 transition-all group">
-                    <div className={`h-14 w-14 ${action.color} rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 group-hover:rotate-3 transition-transform shadow-sm`}>
-                      {action.icon}
-                    </div>
-                    <span className="text-[11px] font-black text-gray-600 uppercase tracking-tighter">{action.label}</span>
-                  </Link>
+                {['Analytics', 'Deployments', 'Security', 'Settings'].map((action) => (
+                  <button
+                    key={action}
+                    className="p-4 rounded-2xl bg-white/80 border border-slate-100 text-slate-600 font-bold text-sm hover:border-indigo-200 hover:text-indigo-600 hover:bg-white transition-all shadow-sm"
+                  >
+                    {action}
+                  </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* --- RIGHT SIDEBAR --- */}
-          <div className="space-y-8">
-            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm h-full">
-              <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-400 mb-6">Live Logs</h3>
-              <div className="space-y-6">
-                {[
-                  { title: 'Session started', time: '2 mins ago', color: 'bg-green-400' },
-                  { title: 'Security check', time: '4 hours ago', color: 'bg-blue-400' },
-                  { title: 'Cloud sync', time: '1 day ago', color: 'bg-purple-400' },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-4 items-start">
-                    <div className={`w-1 rounded-full h-8 mt-1 ${item.color}`} />
-                    <div>
-                      <p className="text-sm font-black text-gray-800 tracking-tight">{item.title}</p>
-                      <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{item.time}</p>
-                    </div>
-                  </div>
-                ))}
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-slate-900/95 backdrop-blur-md p-8 rounded-[2.5rem] shadow-2xl h-full text-white border border-slate-800">
+              <div className="flex items-center justify-between mb-10">
+                <h2 className="font-black uppercase tracking-widest text-xs opacity-50">Live Feed</h2>
+                <FiActivity className="text-indigo-400 animate-pulse" />
               </div>
-              <Link to="/activity" className="block w-full mt-10 py-4 bg-gray-50 text-gray-900 border border-gray-100 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all shadow-sm">
-                Full History
-              </Link>
+              
+              <div className="space-y-8">
+                <AnimatePresence>
+                  {ACTIVITY.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="group flex gap-5 items-start"
+                    >
+                      <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 
+                        ${item.status === 'success' ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 
+                          item.status === 'warning' ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 
+                          'bg-indigo-400'}`} 
+                      />
+                      <div>
+                        <p className="text-sm font-bold text-slate-100 leading-snug">{item.title}</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase mt-1">{item.time}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
