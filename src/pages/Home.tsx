@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 function Home() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
@@ -10,6 +14,16 @@ function Home() {
 
   const staggerContainer = {
     animate: { transition: { staggerChildren: 0.2 } }
+  };
+
+  // Logic to handle the Buy Services click 
+  // Funnels users to Signup or directly to their Dashboard
+  const handleBuyServices = () => {
+    if (isAuthenticated()) {
+      navigate('/dashboard');
+    } else {
+      navigate('/signup');
+    }
   };
 
   return (
@@ -64,27 +78,27 @@ function Home() {
                 </motion.p>
 
                 <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-5">
-                  <Link to="/services">
+                  {/* Updated "Buy Services" Button */}
+                  <motion.button 
+                    onClick={handleBuyServices}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 bg-green-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-green-500 transition-all shadow-lg shadow-green-600/20 w-full sm:w-auto"
+                  >
+                    {isAuthenticated() ? "Go to Dashboard" : "Buy Services"}
+                  </motion.button>
+                  
+                  <Link to="/services" className="w-full sm:w-auto">
                     <motion.button 
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-8 py-4 bg-green-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-green-500 transition-all shadow-lg shadow-green-600/20 w-full sm:w-auto"
+                      className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl transition-all w-full"
                     >
                       Explore Services
                     </motion.button>
                   </Link>
-                  <motion.button 
-                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl transition-all w-full sm:w-auto"
-                  >
-                    Get In Touch
-                  </motion.button>
                 </motion.div>
               </div>
-
-              {/* Right Side: Decorative Glass Card */}
-       
             </motion.div>
           </div>
         </section>
@@ -133,15 +147,16 @@ function Home() {
             <p className="text-gray-400 text-lg mb-12 font-medium">
               Join hundreds of vendors who are already growing with KaarBaar. <br className="hidden md:block"/> Let's build something remarkable together.
             </p>
-            <Link to="/contact">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-12 py-5 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-2xl shadow-cyan-500/20"
-              >
-                Start Your Journey
-              </motion.button>
-            </Link>
+            
+            {/* Updated CTA Button */}
+            <motion.button 
+              onClick={handleBuyServices}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-12 py-5 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-black uppercase text-sm tracking-[0.2em] rounded-2xl shadow-2xl shadow-cyan-500/20"
+            >
+              {isAuthenticated() ? "Go to Dashboard" : "Buy Services Now"}
+            </motion.button>
           </div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-cyan-500/20 blur-[120px] rounded-full -z-10"></div>
         </section>
