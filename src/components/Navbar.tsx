@@ -57,7 +57,8 @@ function Navbar() {
     <div className="flex flex-col justify-center items-start pointer-events-none">
       <span className="font-semibold text-lg md:text-[1.4rem] tracking-tight leading-none text-white">
         <span>KAAR</span>
-        <span className="text-emerald-400 font-light">BAAR</span>
+        {/* Changed text-emerald-400 to text-blue-400 */}
+        <span className="text-blue-400 font-light">BAAR</span>
       </span>
       <span className="text-[7px] md:text-[8px] font-medium uppercase tracking-[0.3em] text-gray-400 mt-1 block leading-none">
         Solutions
@@ -65,7 +66,6 @@ function Navbar() {
     </div>
   </Link>
 </motion.div>
-
         {/* --- Desktop Nav (Minimalist Capsule Layout) --- */}
         <div className="hidden lg:flex items-center bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-full px-1 py-1 shadow-inner">
           {navLinks.map((item) => (
