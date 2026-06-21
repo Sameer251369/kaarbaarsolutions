@@ -111,14 +111,14 @@ function Home() {
 
             {/* Centered Action Buttons */}
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-              <motion.button 
-                onClick={handleBookCall}
-                whileHover={{ y: -2 }}
-                whileTap={{ y: 0 }}
-                className="px-8 py-3.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-gray-100 transition-colors shadow-2xl w-full sm:w-64 text-center"
-              >
-                Book Direct Call
-              </motion.button>
+            <motion.button 
+  onClick={() => window.location.href = "tel:+916005349142"}
+  whileHover={{ y: -2 }}
+  whileTap={{ y: 0 }}
+  className="px-8 py-3.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-gray-100 transition-colors shadow-2xl w-full sm:w-64 text-center"
+>
+  Book Direct Call
+</motion.button>
               
               <Link to="/services" className="w-full sm:w-auto">
                 <motion.button 
