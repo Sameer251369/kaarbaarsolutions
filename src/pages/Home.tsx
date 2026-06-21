@@ -85,13 +85,13 @@ function Home() {
             className="max-w-3xl flex flex-col items-center justify-center"
           >
             {/* Meta-style Pill Badge */}
-            <motion.div 
-              variants={fadeInUp}
-              className="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-medium tracking-wider uppercase text-emerald-400 bg-black/60 border border-emerald-500/30 backdrop-blur-md rounded-full shadow-md"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Kashmir &bull; Bengaluru
-            </motion.div>
+          <motion.div 
+  variants={fadeInUp}
+  className="inline-flex items-center gap-2 px-3 py-1 mb-8 text-xs font-medium tracking-wider uppercase text-blue-400 bg-black/60 border border-blue-500/30 backdrop-blur-md rounded-full shadow-md"
+>
+  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+  Kashmir &bull; Bengaluru
+</motion.div>  
             
             {/* Editorial Tech Typography */}
             <motion.h1 
