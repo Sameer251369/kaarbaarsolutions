@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackEvent } from '../lib/trackingApi';
 
-// Validated matching asset arrays mapped from your active workspace file tree
 const BACKGROUND_IMAGES = [
   '/jakub-zerdzicki-j_hho1mE47s-unsplash.jpg',
   '/jakub-zerdzicki-tFecc1boKYc-unsplash.jpg',
@@ -13,7 +12,8 @@ const BACKGROUND_IMAGES = [
 function Home() {
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
 
-  // Background rotater hook: Transitions cleanly every 6 seconds
+  // Expanded the interval to 6000ms (6s) so the user can enjoy the scenery.
+  // Slowing down the rotation itself provides a premium, calm feel.
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBgIndex((prevIndex) => (prevIndex + 1) % BACKGROUND_IMAGES.length);
@@ -21,7 +21,6 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Clean, high-end animation parameters modeled after premium tech sites
   const fadeInUp = {
     initial: { opacity: 0, y: 15 },
     animate: { opacity: 1, y: 0 },
@@ -38,11 +37,8 @@ function Home() {
         phoneNumber: '+916005349142',
       });
     } catch (_error) {
-      // Keep primary flow uninterrupted even if tracking is unavailable.
+      // Keep flow uninterrupted
     }
-    
-    // Direct tel link fallback execution if needed programmatically, 
-    // though the standard standard anchor tagging handles this seamlessly.
     window.location.href = 'tel:+916005349142';
   };
 
@@ -51,13 +47,15 @@ function Home() {
       
       {/* --- Continuous High-End Background Carousel Layer --- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <AnimatePresence mode="wait">
+        {/* REMOVED mode="wait" to enable beautiful cross-fading where images overlap during transit */}
+        <AnimatePresence>
           <motion.div
             key={BACKGROUND_IMAGES[currentBgIndex]}
-            initial={{ opacity: 0, scale: 1.01 }}
-            animate={{ opacity: 0.75, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.99 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.75 }}
+            exit={{ opacity: 0 }}
+            // Extended duration to 2 seconds and switched to a softer, linear-cubic ease for the dissolve
+            transition={{ duration: 2.0, ease: 'easeInOut' }}
             className="absolute inset-0 w-full h-full"
           >
             <img 
@@ -68,12 +66,12 @@ function Home() {
           </motion.div>
         </AnimatePresence>
         
-        {/* Fine-tuned tint overlays: protects text color contrast without washing out image shapes */}
+        {/* Fine-tuned tint overlays */}
         <div className="absolute inset-0 bg-[#060606]/15" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#060606]/45 via-transparent to-[#060606]/90" />
       </div>
 
-      {/* Premium Tech Ambient Lighting (Meta-style soft glow centered) */}
+      {/* Premium Tech Ambient Lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent pointer-events-none blur-3xl z-10" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
@@ -95,7 +93,7 @@ function Home() {
               Kashmir &bull; Bengaluru
             </motion.div>
             
-            {/* Editorial Tech Typography with enhanced crisp drop shadows */}
+            {/* Editorial Tech Typography */}
             <motion.h1 
               variants={fadeInUp}
               className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight mb-8 text-white leading-[1.05] drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]"
@@ -164,7 +162,6 @@ function Home() {
 
         {/* --- CTA Section --- */}
         <section className="py-28 my-12 relative rounded-[32px] overflow-hidden bg-gradient-to-b from-black/50 to-black/10 border border-white/10 text-center backdrop-blur-md shadow-2xl flex flex-col items-center justify-center">
-          {/* Subtle Backlighting for CTA */}
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="relative z-10 max-w-2xl mx-auto px-6 flex flex-col items-center justify-center">
