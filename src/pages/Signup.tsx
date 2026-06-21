@@ -23,8 +23,8 @@ function Signup(): React.ReactNode {
       setError('Required fields are missing.');
       return false;
     }
-    if (formData.password.length < 6) {
-      setError('Security requires at least 6 characters.');
+    if (formData.password.length < 8) {
+      setError('Security requires at least 8 characters.');
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -37,21 +37,23 @@ function Signup(): React.ReactNode {
     }
     return true;
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
     
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
-        signup({ 
+        // Updated keys to match backend expectations
+        await signup({ 
           firstName: formData.firstName, 
           lastName: formData.lastName, 
           email: formData.email, 
           phone: formData.phone, 
           password: formData.password, 
           company: formData.company, 
+          // 'registeredAt' is handled by timezone.now() on backend, 
+          // but keeping here for frontend state if needed.
           registeredAt: new Date().toISOString() 
         });
         navigate('/dashboard');
@@ -67,7 +69,7 @@ function Signup(): React.ReactNode {
 
   return (
     // Added pt-32 to push content below the Navbar
-    <div className="relative min-h-screen bg-black text-white flex justify-center items-start overflow-x-hidden pt-32 pb-20 px-6">
+    <div className="enterprise-page relative min-h-screen bg-black text-white flex justify-center items-start overflow-x-hidden pt-32 pb-20 px-6">
       
       {/* Background Layer */}
       <div className="absolute inset-0 z-0 bg-gradient-to-tr from-black via-black/90 to-cyan-900/20 pointer-events-none fixed" />
@@ -81,9 +83,9 @@ function Signup(): React.ReactNode {
           className="hidden lg:block space-y-10 sticky top-40" // Sticky keeps it visible while scrolling the form
         >
           <div className="space-y-6">
-            <h2 className="text-7xl font-black tracking-tighter leading-[0.85]">
+            <h2 className="text-6xl font-black tracking-tight leading-[0.95]">
               One Account.<br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-emerald-400 italic">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-emerald-400">
                 Double Access.
               </span>
             </h2>
@@ -94,12 +96,12 @@ function Signup(): React.ReactNode {
 
           <div className="grid grid-cols-2 gap-4 max-w-md">
             {[
-              { icon: '🆓', label: 'Zero Setup Fee' },
-              { icon: '📦', label: 'Scale on Demand' },
-              { icon: '🎯', label: 'Priority Support' },
-              { icon: '🔄', label: 'Real-time Sync' },
+              { icon: '0', label: 'Zero Setup Fee' },
+              { icon: 'S', label: 'Scale on Demand' },
+              { icon: 'P', label: 'Priority Support' },
+              { icon: 'R', label: 'Real-time Sync' },
             ].map((b, i) => (
-              <div key={i} className="p-5 bg-white/[0.03] border border-white/5 rounded-[2rem] backdrop-blur-md">
+              <div key={i} className="p-5 bg-white/[0.03] border border-white/5 rounded-md backdrop-blur-md">
                 <span className="text-2xl mb-3 block">{b.icon}</span>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">{b.label}</p>
               </div>
@@ -113,7 +115,7 @@ function Signup(): React.ReactNode {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-lg mx-auto"
         >
-          <div className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-8 lg:p-12 rounded-[3rem] shadow-2xl">
+          <div className="oracle-card bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-8 lg:p-12 rounded-[3rem] shadow-2xl">
             <div className="mb-10">
               <h1 className="text-4xl font-black tracking-tight mb-2">Join KaarBaar</h1>
               <p className="text-gray-500 text-sm font-medium tracking-wide">Enter your business details to establish your account.</p>
@@ -125,7 +127,7 @@ function Signup(): React.ReactNode {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[10px] font-black uppercase tracking-widest text-center"
+                  className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-[10px] font-bold uppercase tracking-wide text-center"
                 >
                   {error}
                 </motion.div>
@@ -136,17 +138,17 @@ function Signup(): React.ReactNode {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className={labelClasses}>First Name</label>
-                  <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="Sameer" className={inputClasses} />
+                  <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="Sameer" required className={inputClasses} />
                 </div>
                 <div className="space-y-1">
                   <label className={labelClasses}>Last Name</label>
-                  <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Bashir" className={inputClasses} />
+                  <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Bashir" required className={inputClasses} />
                 </div>
               </div>
 
               <div className="space-y-1">
                 <label className={labelClasses}>Professional Email</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="hello@company.com" className={inputClasses} />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="hello@company.com" required className={inputClasses} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -163,11 +165,11 @@ function Signup(): React.ReactNode {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className={labelClasses}>Security Code</label>
-                  <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className={inputClasses} />
+                  <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" required autoComplete="new-password" className={inputClasses} />
                 </div>
                 <div className="space-y-1">
                   <label className={labelClasses}>Verification</label>
-                  <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••" className={inputClasses} />
+                  <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="********" required autoComplete="new-password" className={inputClasses} />
                 </div>
               </div>
 
@@ -189,9 +191,9 @@ function Signup(): React.ReactNode {
                 whileTap={{ scale: 0.99 }}
                 type="submit" 
                 disabled={loading}
-                className="w-full bg-white text-black py-6 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-emerald-400 transition-all shadow-xl shadow-white/5"
+                className="w-full bg-white text-black py-6 rounded-2xl font-bold uppercase text-[10px] tracking-wide hover:bg-emerald-400 transition-all shadow-xl shadow-white/5"
               >
-                {loading ? 'Processing...' : 'Establish Identity →'}
+                {loading ? 'Processing...' : 'Establish Identity ->'}
               </motion.button>
             </form>
 

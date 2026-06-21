@@ -1,21 +1,24 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { getAuthToken, getCurrentUser, loginUser, setAuthToken, signupUser } from '../lib/trackingApi';
 
 interface User {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
   phone?: string;
   company?: string;
-  password?: string;
+  role?: string;
   registeredAt?: string;
-  avatar?: string; // <--- ADDED THIS LINE
+  lastLoginAt?: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signup: (userData: User) => User;
-  login: (email: string, password: string) => User;
+  signup: (userData: Omit<User, 'id'> & { password: string }) => Promise<User>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
   isAuthenticated: () => boolean;
 }
@@ -27,60 +30,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+    let mounted = true;
+
+    async function loadSession() {
+      const token = getAuthToken();
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Failed to parse stored user:', error);
-        localStorage.removeItem('user');
+        const response = await getCurrentUser();
+        if (mounted) setUser(response.user);
+      } catch (_error) {
+        setAuthToken('');
+        if (mounted) setUser(null);
+      } finally {
+        if (mounted) setLoading(false);
       }
     }
-    setLoading(false);
+
+    loadSession();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const signup = (userData: User): User => {
-    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-    if (existingUsers.some((u: User) => u.email === userData.email)) {
-      throw new Error('Email already registered');
-    }
-
-    // Add a default avatar if none exists during signup
-    const newUser = { 
-      ...userData, 
-      avatar: userData.avatar || `https://ui-avatars.com/api/?name=${userData.firstName}&background=0D8ABC&color=fff` 
-    };
-
-    existingUsers.push(newUser);
-    localStorage.setItem('users', JSON.stringify(existingUsers));
-
-    const userToStore = { ...newUser };
-    delete userToStore.password;
-    setUser(userToStore);
-    localStorage.setItem('user', JSON.stringify(userToStore));
-
-    return userToStore;
+  const signup = async (userData: Omit<User, 'id'> & { password: string }): Promise<User> => {
+    const response = await signupUser({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      phone: userData.phone || '',
+      company: userData.company || '',
+      password: userData.password,
+    });
+    setAuthToken(response.token);
+    setUser(response.user);
+    return response.user;
   };
 
-  const login = (email: string, password: string): User => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const foundUser = users.find((u: User) => u.email === email && u.password === password);
-
-    if (!foundUser) {
-      throw new Error('Invalid email or password');
-    }
-
-    const userToStore = { ...foundUser };
-    delete userToStore.password;
-    setUser(userToStore);
-    localStorage.setItem('user', JSON.stringify(userToStore));
-
-    return userToStore;
+  const login = async (email: string, password: string): Promise<User> => {
+    const response = await loginUser(email, password);
+    setAuthToken(response.token);
+    setUser(response.user);
+    return response.user;
   };
 
   const logout = (): void => {
     setUser(null);
-    localStorage.removeItem('user');
+    setAuthToken('');
   };
 
   const isAuthenticated = (): boolean => {

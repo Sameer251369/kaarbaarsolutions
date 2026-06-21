@@ -5,110 +5,98 @@ function Footer(): React.ReactNode {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 bg-black border-t border-white/5 pt-24 pb-12 px-8 lg:px-16 overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
-      
+    <footer className="relative z-10 bg-[#060606] border-t border-white/5 px-6 py-16 lg:px-16 antialiased selection:bg-white/20">
       <div className="max-w-7xl mx-auto">
-        {/* TOP ROW */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-20">
+        
+        {/* --- Top Layout Grid --- */}
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 pb-16">
           
-          {/* Brand Column */}
-          <div className="lg:col-span-4 space-y-8">
-            <Link to="/" className="flex items-center gap-4 group">
-              <div className="w-12 h-12 rounded-2xl overflow-hidden border border-white/10 group-hover:border-emerald-500/50 transition-all duration-500">
-                <img 
-                  src="/ChatGPT Image Apr 15, 2026, 06_53_10 PM.png" 
-                  alt="KaarBaar Logo" 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" 
-                />
+          {/* Brand Identity Module matching Navbar exactly */}
+          <div className="lg:col-span-5 space-y-6">
+            <Link to="/" className="inline-flex items-center gap-2.5 group relative">
+              <div className="relative overflow-hidden rounded-md bg-white/5 p-[1px] border border-white/10 transition-transform">
+                <div className="bg-transparent rounded flex items-center justify-center overflow-hidden aspect-square h-9 w-9 md:h-[42px] md:w-[42px]">
+                  <img
+                    src="/cool.jpeg"
+                    alt="Logo"
+                    className="h-full w-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                  />
+                </div>
               </div>
-              <div>
-                <div className="font-black text-xl tracking-tighter text-white">KaarBaar</div>
-                <div className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em]">Solutions</div>
+
+              <div className="flex flex-col justify-center items-start">
+                <span className="font-medium text-xl md:text-[1.65rem] leading-[0.85] tracking-tight">
+                  <span className="text-white transition-colors duration-300">
+                    <span>KAAR</span>
+                    <span className="text-gray-400 font-normal italic">BAAR</span>
+                  </span>
+                </span>
+                <span className="text-[8px] md:text-[10px] font-semibold uppercase tracking-[0.28em] text-gray-500 mt-1.5 ml-0.5 block leading-none">
+                  Solutions
+                </span>
               </div>
             </Link>
-            
-            <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
-              Bridging the gap between street-side craftsmanship and global digital screens. Architecting legacies from Kashmir to Bangalore.
-            </p>
 
-            {/* Social Icons */}
-            <div className="flex gap-3">
-              {['FB', 'IG', 'LI', 'TW'].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-[10px] font-black hover:bg-emerald-500/10 hover:border-emerald-500/50 hover:text-emerald-400 transition-all duration-300"
-                >
-                  {social}
-                </a>
-              ))}
-            </div>
+            <p className="max-w-xs text-xs md:text-sm leading-relaxed text-gray-400 font-normal">
+              Digital architecture, platform engineering, and performance marketing workflows deployed intentionally for businesses seeking predictable scale.
+            </p>
           </div>
 
-          {/* Links Columns */}
-          <div className="lg:col-span-2 space-y-6">
-            <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Company</h4>
-            <div className="flex flex-col gap-4">
-              {[['/', 'Home'], ['/services', 'Services'], ['/about', 'About'], ['/contact', 'Contact']].map(([to, label]) => (
-                <Link key={label} to={to} className="text-gray-500 text-sm hover:text-white hover:translate-x-1 transition-all">
+          {/* Directory Module */}
+          <div className="lg:col-span-2">
+            <h4 className="mb-5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Company</h4>
+            <div className="flex flex-col gap-3">
+              {[
+                ['/', 'Home'], 
+                ['/services', 'Services'], 
+                ['/about', 'About'], 
+                ['/contact', 'Contact']
+              ].map(([to, label]) => (
+                <Link key={label} to={to} className="text-xs text-gray-500 font-normal transition-colors hover:text-white">
                   {label}
                 </Link>
               ))}
             </div>
           </div>
 
-          <div className="lg:col-span-2 space-y-6">
-            <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Expertise</h4>
-            <div className="flex flex-col gap-4">
-              {['Web Design', 'Development', 'Brand Strategy', 'Marketing'].map((s) => (
-                <Link key={s} to="/services" className="text-gray-500 text-sm hover:text-emerald-400 transition-all">
-                  {s}
+          {/* Core Fields Module */}
+          <div className="lg:col-span-2">
+            <h4 className="mb-5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Expertise</h4>
+            <div className="flex flex-col gap-3">
+              {['Web Systems', 'Engineering', 'Brand Architecture', 'Performance Marketing'].map((item) => (
+                <Link key={item} to="/services" className="text-xs text-gray-500 font-normal transition-colors hover:text-white">
+                  {item}
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Branch Offices Column */}
-          <div className="lg:col-span-4 space-y-6">
-            <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Our Hubs</h4>
-            <div className="grid grid-cols-1 gap-4">
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-cyan-500/20 transition-colors">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-black text-cyan-400 tracking-widest uppercase">Kashmir</span>
-                  <span className="text-lg">🏔️</span>
-                </div>
-                <p className="text-[11px] text-gray-500">Srinagar HQ • Creative & Strategy</p>
+          {/* Workspace Nodes Module */}
+          <div className="lg:col-span-3">
+            <h4 className="mb-5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Nodes</h4>
+            <div className="space-y-3">
+              <div className="rounded-xl border border-white/5 bg-white/[0.01] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">Kashmir</p>
+                <p className="mt-1 text-xs text-gray-500 font-normal">Creative Direction & Structural Craft</p>
               </div>
-              
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-emerald-500/20 transition-colors">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-black text-emerald-400 tracking-widest uppercase">Bangalore</span>
-                  <span className="text-lg">🌆</span>
-                </div>
-                <p className="text-[11px] text-gray-500">Karnataka Hub • Tech & Innovation</p>
+              <div className="rounded-xl border border-white/5 bg-white/[0.01] p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">Bangalore</p>
+                <p className="mt-1 text-xs text-gray-500 font-normal">High-Performance Engineering Hub</p>
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* BOTTOM ROW */}
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-[10px] font-medium text-gray-600 tracking-widest uppercase">
-            © {year} KaarBaar Solutions • Crafted for Growth
-          </div>
-          
-          <div className="flex gap-8">
-            <Link to="#" className="text-[10px] font-black text-gray-600 hover:text-white uppercase tracking-widest transition-colors">
-              Privacy
-            </Link>
-            <Link to="#" className="text-[10px] font-black text-gray-600 hover:text-white uppercase tracking-widest transition-colors">
-              Terms
-            </Link>
+        {/* --- Bottom Utility Panel --- */}
+        <div className="flex flex-col gap-4 border-t border-white/5 pt-8 text-[11px] text-gray-600 md:flex-row md:items-center md:justify-between font-normal">
+          <p>© {year} KaarBaar Solutions. Built for engineering precision.</p>
+          <div className="flex gap-6">
+            <Link to="#" className="hover:text-gray-400 transition-colors">Privacy Framework</Link>
+            <Link to="#" className="hover:text-gray-400 transition-colors">Terms of Operations</Link>
           </div>
         </div>
+
       </div>
     </footer>
   );
